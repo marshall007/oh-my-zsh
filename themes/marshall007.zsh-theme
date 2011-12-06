@@ -115,11 +115,11 @@ setprompt () {
     # APM detection
 
     if which ibam > /dev/null; then
-		PR_APM='$PR_RED${${PR_APM_RESULT[(f)1]}[(w)-2]}%%(${${PR_APM_RESULT[(f)3]}[(w)-1]})$PR_LIGHT_BLUE:'
+		PR_APM='$PR_RED${${PR_APM_RESULT[(f)1]}[(w)-2]}%%(${${PR_APM_RESULT[(f)3]}[(w)-1]})$PR_LIGHT_BLUE%):'
     elif which apm > /dev/null; then
-		PR_APM='$PR_RED${PR_APM_RESULT[(w)5,(w)6]/\% /%%}$PR_LIGHT_BLUE:'
-    elif [[ -n `$PR_APM_RESULT` ]]; then
-		PR_APM='$PR_GREEN${PR_APM_RESULT}$PR_LIGHT_BLUE)'
+		PR_APM='$PR_RED${PR_APM_RESULT[(w)5,(w)6]/\% /%%}$PR_LIGHT_BLUE%):'
+    elif [ -n $PR_APM_RESULT ]; then
+		PR_APM='$PR_GREEN${PR_APM_RESULT}$PR_LIGHT_BLUE%):'
 	else
 		PR_APM=''
     fi
@@ -136,8 +136,8 @@ $PR_MAGENTA%$PR_PWDLEN<...<%~%<<\
 $PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_CYAN$PR_URCORNER$PR_SHIFT_OUT\
 
 $PR_CYAN$PR_SHIFT_IN$PR_LLCORNER$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
-${(e)PR_APM}$PR_LIGHT_BLUE:\
-%(?..$PR_LIGHT_RED%?$PR_BLUE:)\
+${(e)PR_APM}\
+%(?..$PR_LIGHT_RED%?$PR_BLUE$PR_LIGHT_BLUE:)\
 %(!.$PR_RED.$PR_WHITE)%#$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_NO_COLOUR '
