@@ -30,8 +30,10 @@ function precmd {
 		PR_APM_RESULT=`ibam --percentbattery`
     elif which apm > /dev/null; then
 		PR_APM_RESULT=`apm`
-	else
+	elif [ -n "`ioreg -rfn "AppleSmartBattery"`" ]; then
 		PR_APM_RESULT=`ioreg -rfn "AppleSmartBattery" | grep "Capacity" | awk 'BEGIN{FS=" = ";} { if($1 == "      \"CurrentCapacity\"") c=$2; else if($1 == "      \"MaxCapacity\"") m=$2;} END{if(m!=0) print int(c*100/m);}'`
+	else
+		PR_APM_RESULT=''
     fi
 
 }
