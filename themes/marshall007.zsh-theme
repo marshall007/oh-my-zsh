@@ -1,4 +1,5 @@
-
+###
+# Custom oh-my-zsh theme by marshall007
 
 function precmd {
 	
@@ -30,8 +31,9 @@ function precmd {
     elif which apm > /dev/null; then
 		PR_APM_RESULT=`apm`
 	else
-		PR_APM_RESULT=`ioreg -rfn "AppleSmartBattery" | grep "MaxCapacity\|CurrentCapacity" | awk 'BEGIN{FS=" = "; c=1; m=1;} { if($1 == "      \"CurrentCapacity\"") c=$2; else if($1 == "      \"MaxCapacity\"") m=$2;} END{print int(c*100/m);}'`
+		PR_APM_RESULT=`ioreg -rfn "AppleSmartBattery" | grep "Capacity" | awk 'BEGIN{FS=" = ";} { if($1 == "      \"CurrentCapacity\"") c=$2; else if($1 == "      \"MaxCapacity\"") m=$2;} END{if(m!=0) print int(c*100/m);}'`
     fi
+
 }
 
 setopt extended_glob
@@ -41,6 +43,7 @@ preexec () {
 		local CMD=${1[(wr)^(*=*|sudo|-*)]}
 		echo -ne "\ek$CMD\e\\"
     fi
+
 }
 
 setprompt () {
@@ -115,7 +118,9 @@ setprompt () {
 		PR_APM='$PR_RED${${PR_APM_RESULT[(f)1]}[(w)-2]}%%(${${PR_APM_RESULT[(f)3]}[(w)-1]})$PR_LIGHT_BLUE:'
     elif which apm > /dev/null; then
 		PR_APM='$PR_RED${PR_APM_RESULT[(w)5,(w)6]/\% /%%}$PR_LIGHT_BLUE:'
-    else
+    elif [[ -n `$PR_APM_RESULT` ]]; then
+		PR_APM='$PR_GREEN${PR_APM_RESULT}$PR_LIGHT_BLUE)'
+	else
 		PR_APM=''
     fi
 
@@ -131,19 +136,20 @@ $PR_MAGENTA%$PR_PWDLEN<...<%~%<<\
 $PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_CYAN$PR_URCORNER$PR_SHIFT_OUT\
 
 $PR_CYAN$PR_SHIFT_IN$PR_LLCORNER$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
+${(e)PR_APM}$PR_LIGHT_BLUE:\
 %(?..$PR_LIGHT_RED%?$PR_BLUE:)\
-${(e)PR_APM}$PR_YELLOW%D{%H:%M}\
-$PR_LIGHT_BLUE:%(!.$PR_RED.$PR_WHITE)%#$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+%(!.$PR_RED.$PR_WHITE)%#$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_NO_COLOUR '
 	
 	RPROMPT=' $PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_BLUE$PR_HBAR$PR_SHIFT_OUT\
-($PR_YELLOW%D{%a,%b%d}$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_CYAN$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
+($PR_YELLOW%D{%H:%M,%b%d}$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_CYAN$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
 	
 	PS2='$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
 $PR_LIGHT_GREEN%_$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
+
 }
 
 setprompt
